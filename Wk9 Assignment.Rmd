@@ -1,0 +1,39 @@
+---
+title: "Data Acquisition and Management Weekly Assignment - wk9"
+author: "Chun San Yip"
+date: "2020/03/29"
+output: html_document
+---
+  
+Overview:
+The assignment for this week is related to API. 
+The task is to choose one of the New York Times APIs, construct an interface in R to read in the JSON data, and transform it into an R DataFrame.
+The New York Times web site provides a rich set of APIs, as described here:https://developer.nytimes.com/apis 
+I need to start by signing up for an API key.
+
+Load all the required packages.
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(httr)
+library(jsonlite)
+```
+
+Search the Movies API by "Star Wars"
+```{r}
+jStar <- "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query=star wars&api-key=xKfN6XkV5Uzt3DzbxpuGuP6tw7DAr4oD"
+
+#Use httr Request
+m <- GET(jStar)
+
+#Extract content from a request
+jM <- content(m, "parse")
+
+#Convert the list to a dataframe 
+jF <- data.frame(t(sapply((jM[[5]]), c)))
+
+#Something is wrong with the jF dataframe as each "field" is still a list, I have to convert by usinng the view function
+jFmodify <- view(jF)
+
+jFmodify
+          
+```
